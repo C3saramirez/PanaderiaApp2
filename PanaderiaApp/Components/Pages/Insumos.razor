@@ -1,0 +1,73 @@
+﻿@page "/inventario"
+@rendermode InteractiveServer
+@inject NavigationManager _navigator;
+@inject IRepositorioInsumos _repositorio;
+
+<h3>Inventario</h3>
+
+<a class="btn btn-success" href="productos/nuevo">Agregar Insumo</a>
+
+@if (_insumos == null)
+{
+    <p>Cargando...</p>
+}
+
+else if (_insumos.Count == 0)
+{
+    <p>No existen insumos en el inventario</p>
+}
+
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Insumo insumos in _insumos)
+
+            {
+                <tr>
+                    <td>@insumos.Id</td>
+                    <td>@insumos.Nombre</td>
+                    <td>@insumos.Precio</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="()=>Editar(insumos.Id)">Editar</button>
+                        <button class="btn btn-danger" @onclick="()=>Eliminar(insumos)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private List<Insumo>? _insumos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _insumos = await _repositorio.GetAll();
+    }
+
+    private async void Eliminar(Insumo inventario)
+    {
+        await _repositorio.Delete(inventario.Id);
+        _insumos!.Remove(inventario);
+        StateHasChanged();
+    }
+
+    private void Editar(int id)
+    {
+        _navigator.NavigateTo($"/inventario/editar/{id}");
+    }
+
+}

@@ -1,0 +1,76 @@
+﻿@page "/Proveedores"
+@rendermode InteractiveServer
+@inject NavigationManager _navigator;
+@inject IRepositorioProveedores _repositorio;
+
+<h3>Proveedores</h3>
+
+<a class="btn btn-success" href="proveedores/nuevo">Agregar Proveedor</a>
+
+@if (_proveedor == null)
+{
+    <p>Cargando...</p>
+}
+
+else if (_proveedor.Count == 0)
+{
+    <p>No existen proveedores</p>
+}
+
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Telefono</th>
+                <th>Direccion</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Proveedor provedor in _proveedor)
+
+            {
+                <tr>
+                    <td>@provedor.Id</td>
+                    <td>@provedor.Nombre</td>
+                    <td>@provedor.Correo</td>
+                    <td>@provedor.Telefono</td>
+                    <td>@provedor.Direccion</td>
+
+                    <td>
+                        <button class="btn btn-primary" @onclick="()=>Editar(proveedor.Id)">Editar</button>
+                        <button class="btn btn-danger" @onclick="()=>Eliminar(proveedor)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private List<Producto>? _productos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _productos = await _repositorio.GetAll();
+    }
+
+    private async void Eliminar(Producto inventario)
+    {
+        await _repositorio.Delete(inventario.Id);
+        _productos!.Remove(inventario);
+        StateHasChanged();
+    }
+
+    private void Editar(int id)
+    {
+        _navigator.NavigateTo($"/inventario/editar/{id}");
+    }
+
+}
