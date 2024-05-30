@@ -7,8 +7,8 @@ namespace PanaderiaApp.Repositorios
         Task<List<Insumo>> GetAll();
         Task<Insumo?> Get(int id);
 
-        Task<Insumo> Add(Insumo inventario);
-        Task Update(Insumo inventario);
+        Task<Insumo> Add(Insumo insumo);
+        Task Update(Insumo insumo);
         Task Delete(int id);
     }
 }

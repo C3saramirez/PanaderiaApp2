@@ -24,23 +24,23 @@ else
             <tr>
                 <th>Id</th>
                 <th>Nombre</th>
-                <th>Descripcion</th>
-                <th>Precio</th>
+                <th>Descripción</th>
+                <th>Precio de compra</th>
                 <th>Cantidad</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (Insumo insumos in _insumos)
+            @foreach (Insumo insumo in _insumos)
 
             {
                 <tr>
-                    <td>@insumos.Id</td>
-                    <td>@insumos.Nombre</td>
-                    <td>@insumos.Precio</td>
+                    <td>@insumo.Id</td>
+                    <td>@insumo.Nombre</td>
+                    <td>@insumo.Precio</td>
                     <td>
-                        <button class="btn btn-primary" @onclick="()=>Editar(insumos.Id)">Editar</button>
-                        <button class="btn btn-danger" @onclick="()=>Eliminar(insumos)">Eliminar</button>
+                        <button class="btn btn-primary" @onclick="()=>Editar(insumo.Id)">Editar</button>
+                        <button class="btn btn-danger" @onclick="()=>Eliminar(insumo)">Eliminar</button>
                     </td>
                 </tr>
             }
@@ -58,16 +58,16 @@ else
         _insumos = await _repositorio.GetAll();
     }
 
-    private async void Eliminar(Insumo inventario)
+    private async void Eliminar(Insumo insumo)
     {
-        await _repositorio.Delete(inventario.Id);
-        _insumos!.Remove(inventario);
+        await _repositorio.Delete(insumo.Id);
+        _insumos!.Remove(insumo);
         StateHasChanged();
     }
 
     private void Editar(int id)
     {
-        _navigator.NavigateTo($"/inventario/editar/{id}");
+        _navigator.NavigateTo($"/insumos/editar/{id}");
     }
 
 }

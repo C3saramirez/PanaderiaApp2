@@ -7,8 +7,8 @@ namespace PanaderiaApp.Repositorios
         Task<List<Producto>> GetAll();
         Task<Producto?> Get(int id);
 
-        Task<Producto> Add(Producto inventario);
-        Task Update(Producto inventario);
+        Task<Producto> Add(Producto producto);
+        Task Update(Producto producto);
         Task Delete(int id);
     }
 }

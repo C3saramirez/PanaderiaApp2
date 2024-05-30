@@ -24,8 +24,8 @@ else
             <tr>
                 <th>Id</th>
                 <th>Nombre</th>
-                <th>Descripcion</th>
-                <th>Precio</th>
+                <th>Descripción</th>
+                <th>Precio de venta</th>
                 <th>Cantidad</th>
                 <th>Acciones</th>
             </tr>
@@ -58,16 +58,16 @@ else
         _productos = await _repositorio.GetAll();
     }
 
-    private async void Eliminar(Producto inventario)
+    private async void Eliminar(Producto producto)
     {
-        await _repositorio.Delete(inventario.Id);
-        _productos!.Remove(inventario);
+        await _repositorio.Delete(producto.Id);
+        _productos!.Remove(producto);
         StateHasChanged();
     }
 
     private void Editar(int id)
     {
-        _navigator.NavigateTo($"/inventario/editar/{id}");
+        _navigator.NavigateTo($"/productos/editar/{id}");
     }
 
 }

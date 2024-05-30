@@ -1,5 +1,77 @@
-﻿<h3>FormProductos</h3>
+﻿@page "/productos/nuevo"
+@page "/productos/editar/{Id:int}"
+@rendermode InteractiveServer
+@inject IRepositorioProductos _repository;
+@inject NavigationManager _navigator;
+<PageTitle>@_message producto</PageTitle>
+<h2>@_message producto</h2>
+
+<EditForm Model="_producto" FormName="frmProductos" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="row mb-3">
+        <label for="txtNombre" class="col-2 col-form-label">Nombre</label>
+        <div class="col-10">
+            <InputText class="form-control" id="txtNombre" @bind-Value="_producto.Nombre"></InputText>
+            <ValidationMessage For="@(() => _producto.Nombre)" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="txtDescripcion" class="col-form-label col-2">Descripción</label>
+        <div class="col-10">
+            <InputText class="form-control" id="txtDescripcion" @bind-Value="_producto.Descripcion"></InputText>
+            <ValidationMessage For="@(() => _producto.Descripcion)" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="txtPrecio" class="col-2 col-form-label">Precio de venta</label>
+        <div class="col-10">
+            <InputText class="form-control" id="txtPrecio" @bind-Value="_producto.Precio"></InputText>
+            <ValidationMessage For="@(() => _producto.Precio)" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <button type="button" class="btn btn-danger ms-2" @onclick="Cancelar" @onclick:preventDefault>Cancelar</button>
+
+</EditForm>
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
+    private string _message = "";
+    private Producto _producto = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id > 0)
+        {
+            Producto? producto = await _repository.Get(Id);
+            _producto.Id = producto!.Id;
+            _producto.Nombre = producto.Nombre;
+            _producto.Descripcion = producto.Descripcion;
+            _producto.Precio = producto.Precio;
+            _message = "Editar";
+        }
+        else
+        {
+            _message = "Nuevo";
+        }
+    }
+
+    private async void Guardar()
+    {
+        if (Id > 0)
+        {
+            await _repository.Update(_producto!);
+        }
+        else
+        {
+            await _repository.Add(_producto);
+        }
+        Cancelar();
+    }
+
+    private void Cancelar()
+    {
+        _navigator.NavigateTo("/productos");
+    }
 }

@@ -1,5 +1,85 @@
-﻿<h3>FormProveedores</h3>
+﻿@page "/proveedores/nuevo"
+@page "/proveedores/editar/{Id:int}"
+@rendermode InteractiveServer
+@inject IRepositorioProveedores _repository;
+@inject NavigationManager _navigator;
+<PageTitle>@_message proveedor</PageTitle>
+<h2>@_message proveedor</h2>
+
+<EditForm Model="_proveedor" FormName="frmProveedores" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="row mb-3">
+        <label for="txtNombre" class="col-2 col-form-label">Nombre</label>
+        <div class="col-10">
+            <InputText class="form-control" id="txtNombre" @bind-Value="_proveedor.Nombre"></InputText>
+            <ValidationMessage For="@(() => _proveedor.Nombre)" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="txtDireccion" class="col-form-label col-2">Dirección</label>
+        <div class="col-10">
+            <InputText class="form-control" id="txtDireccion" @bind-Value="_proveedor.Direccion"></InputText>
+            <ValidationMessage For="@(() => _proveedor.Direccion)" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="txtTelefono" class="col-2 col-form-label">Teléfono</label>
+        <div class="col-10">
+            <InputText class="form-control" id="txtTelefono" @bind-Value="_proveedor.Telefono"></InputText>
+            <ValidationMessage For="@(() => _proveedor.Telefono)" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="txtCorreo" class="col-2 col-form-label">Correo</label>
+        <div class="col-10">
+            <InputNumber class="form-control" id="txtCorreo" @bind-Value="_proveedor.Correo"></InputNumber>
+            <ValidationMessage For="@(() => _proveedor.Correo)" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <button type="button" class="btn btn-danger ms-2" @onclick="Cancelar" @onclick:preventDefault>Cancelar</button>
+
+</EditForm>
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
+    private string _message = "";
+    private Proveedor _proveedor = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id > 0)
+        {
+            Proveedor? proveedor = await _repository.Get(Id);
+            _proveedor.Id = proveedor!.Id;
+            _proveedor.Nombre = proveedor.Nombre;
+            _proveedor.Direccion = proveedor.Direccion;
+            _proveedor.Telefono = proveedor.Telefono;
+            _proveedor.Correo = proveedor.Correo;
+            _message = "Editar";
+        }
+        else
+        {
+            _message = "Nuevo";
+        }
+    }
+
+    private async void Guardar()
+    {
+        if (Id > 0)
+        {
+            await _repository.Update(_proveedor!);
+        }
+        else
+        {
+            await _repository.Add(_proveedor);
+        }
+        Cancelar();
+    }
+
+    private void Cancelar()
+    {
+        _navigator.NavigateTo("/proveedores");
+    }
 }

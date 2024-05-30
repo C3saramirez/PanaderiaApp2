@@ -7,12 +7,12 @@
 
 <a class="btn btn-success" href="proveedores/nuevo">Agregar Proveedor</a>
 
-@if (_proveedor == null)
+@if (_proveedores == null)
 {
     <p>Cargando...</p>
 }
 
-else if (_proveedor.Count == 0)
+else if (_proveedores.Count == 0)
 {
     <p>No existen proveedores</p>
 }
@@ -25,21 +25,21 @@ else
                 <th>Id</th>
                 <th>Nombre</th>
                 <th>Correo</th>
-                <th>Telefono</th>
-                <th>Direccion</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (Proveedor provedor in _proveedor)
+            @foreach (Proveedor proveedor in _proveedores)
 
             {
                 <tr>
-                    <td>@provedor.Id</td>
-                    <td>@provedor.Nombre</td>
-                    <td>@provedor.Correo</td>
-                    <td>@provedor.Telefono</td>
-                    <td>@provedor.Direccion</td>
+                    <td>@proveedor.Id</td>
+                    <td>@proveedor.Nombre</td>
+                    <td>@proveedor.Correo</td>
+                    <td>@proveedor.Telefono</td>
+                    <td>@proveedor.Direccion</td>
 
                     <td>
                         <button class="btn btn-primary" @onclick="()=>Editar(proveedor.Id)">Editar</button>
@@ -54,23 +54,23 @@ else
 
 @code {
 
-    private List<Producto>? _productos;
+    private List<Proveedor>? _proveedores;
 
     protected override async Task OnInitializedAsync()
     {
-        _productos = await _repositorio.GetAll();
+        _proveedores = await _repositorio.GetAll();
     }
 
-    private async void Eliminar(Producto inventario)
+    private async void Eliminar(Proveedor proveedor)
     {
-        await _repositorio.Delete(inventario.Id);
-        _productos!.Remove(inventario);
+        await _repositorio.Delete(proveedor.Id);
+        _proveedores!.Remove(proveedor);
         StateHasChanged();
     }
 
     private void Editar(int id)
     {
-        _navigator.NavigateTo($"/inventario/editar/{id}");
+        _navigator.NavigateTo($"/proveedores/editar/{id}");
     }
 
 }

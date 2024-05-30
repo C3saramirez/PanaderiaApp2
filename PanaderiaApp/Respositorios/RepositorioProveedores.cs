@@ -6,19 +6,19 @@ namespace PanaderiaApp.Repositorios
     public class RepositorioProveedores : IRepositorioProveedores
     {
         private readonly PanaderiaDBContext _context;
-        private readonly RepositorioProveedores _repositorioInventario;
+        private readonly RepositorioProveedores _repositorioProveedores;
 
-        public RepositorioProveedores(PanaderiaDBContext context, RepositorioProveedores repositorioInventario)
+        public RepositorioProveedores(PanaderiaDBContext context, RepositorioProveedores repositorioProveedores)
         {
             _context = context;
-            _repositorioInventario = repositorioInventario;
+            _repositorioProveedores = repositorioProveedores;
         }
 
-        public async Task<Proveedor> Add(Proveedor inventario)
+        public async Task<Proveedor> Add(Proveedor proveedor)
         {
-            _context.Proveedores.Add(inventario);
+            _context.Proveedores.Add(proveedor);
             await _context.SaveChangesAsync();
-            return inventario;
+            return proveedor;
         }
 
         public async Task Delete(int id)
@@ -29,14 +29,18 @@ namespace PanaderiaApp.Repositorios
                 _context.Proveedores.Remove(inventario);
                 await _context.SaveChangesAsync();
             }
-            await _repositorioInventario.Delete(id);
+            await _repositorioProveedores.Delete(id);
         }
 
-        public async Task Update(Proveedores inventario)
+        public async Task Update(Proveedor proveedor)
         {
-            var inventarioActual = await _context.Proveedores.FindAsync(inventario.Id);
-            if (inventarioActual != null)
+            var proveedorActual = await _context.Proveedores.FindAsync(proveedor.Id);
+            if (proveedorActual != null)
             {
+                proveedorActual.Nombre = proveedor.Nombre;
+                proveedorActual.Direccion = proveedor.Direccion;
+                proveedorActual.Telefono = proveedor.Telefono;
+                proveedorActual.Correo = proveedor.Correo;
                 await _context.SaveChangesAsync();
             }
 

@@ -7,8 +7,8 @@ namespace PanaderiaApp.Repositorios
         Task<List<Proveedor>> GetAll();
         Task<Proveedor?> Get(int id);
 
-        Task<Proveedor> Add(Proveedor inventario);
-        Task Update(Proveedor inventario);
+        Task<Proveedor> Add(Proveedor proveedor);
+        Task Update(Proveedor proveedor);
         Task Delete(int id);
     }
 }

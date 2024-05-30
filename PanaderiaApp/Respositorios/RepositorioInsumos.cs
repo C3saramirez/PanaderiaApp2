@@ -6,40 +6,40 @@ namespace PanaderiaApp.Repositorios
     public class RepositorioInsumos : IRepositorioInsumos
     {
         private readonly PanaderiaDBContext _context;
-        private readonly RepositorioInsumos _repositorioInventario;
+        private readonly RepositorioInsumos _repositorioInsumos;
 
-        public RepositorioInsumos(PanaderiaDBContext context, RepositorioInsumos repositorioInventario)
+        public RepositorioInsumos(PanaderiaDBContext context, RepositorioInsumos repositorioInsumos)
         {
             _context = context;
-            _repositorioInventario = repositorioInventario;
+            _repositorioInsumos = repositorioInsumos;
         }
 
-        public async Task<Insumo> Add(Insumo inventario)
+        public async Task<Insumo> Add(Insumo insumo)
         {
-            _context.Insumos.Add(inventario);
+            _context.Insumos.Add(insumo);
             await _context.SaveChangesAsync();
-            return inventario;
+            return insumo;
         }
 
         public async Task Delete(int id)
         {
-            var inventario = await _context.Insumos.FindAsync(id);
-            if (inventario != null)
+            var insumo = await _context.Insumos.FindAsync(id);
+            if (insumo != null)
             {
-                _context.Insumos.Remove(inventario);
+                _context.Insumos.Remove(insumo);
                 await _context.SaveChangesAsync();
             }
-            await _repositorioInventario.Delete(id);
+            await _repositorioInsumos.Delete(id);
         }
 
-        public async Task Update(Insumo inventario)
+        public async Task Update(Insumo insumo)
         {
-            var inventarioActual = await _context.Insumos.FindAsync(inventario.Id);
+            var inventarioActual = await _context.Insumos.FindAsync(insumo.Id);
             if (inventarioActual != null)
             {
-                inventarioActual.Nombre = inventario.Nombre;
-                inventarioActual.Descripcion = inventario.Descripcion;
-                inventarioActual.Precio = inventario.Precio;
+                inventarioActual.Nombre = insumo.Nombre;
+                inventarioActual.Descripcion = insumo.Descripcion;
+                inventarioActual.Precio = insumo.Precio;
                 await _context.SaveChangesAsync();
             }
 

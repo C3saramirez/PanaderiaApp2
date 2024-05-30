@@ -6,41 +6,41 @@ namespace PanaderiaApp.Repositorios
     public class RepositorioProductos : IRepositorioProductos
     {
         private readonly PanaderiaDBContext _context;
-        private readonly RepositorioProductos _repositorioInventario;
+        private readonly RepositorioProductos _repositorioProductos;
 
-        public RepositorioProductos(PanaderiaDBContext context, RepositorioProductos repositorioInventario)
+        public RepositorioProductos(PanaderiaDBContext context, RepositorioProductos repositorioProductos)
         {
             _context = context;
-            _repositorioInventario = repositorioInventario;
+            _repositorioProductos = repositorioProductos;
         }
 
-        public async Task<Producto> Add(Producto inventario)
+        public async Task<Producto> Add(Producto producto)
         {
-            _context.Productos.Add(inventario);
+            _context.Productos.Add(producto);
             await _context.SaveChangesAsync();
-            return inventario;
+            return producto;
         }
 
         public async Task Delete(int id)
         {
-            var inventario = await _context.Productos.FindAsync(id);
-            if (inventario != null)
+            var producto = await _context.Productos.FindAsync(id);
+            if (producto != null)
             {
-                _context.Productos.Remove(inventario);
+                _context.Productos.Remove(producto);
                 await _context.SaveChangesAsync();
             }
-            await _repositorioInventario.Delete(id);
+            await _repositorioProductos.Delete(id);
         }
 
-        public async Task Update(Producto inventario)
+        public async Task Update(Producto producto)
         {
-            var inventarioActual = await _context.Productos.FindAsync(inventario.Id);
+            var inventarioActual = await _context.Productos.FindAsync(producto.Id);
             if (inventarioActual != null)
             {
-                inventarioActual.Nombre = inventario.Nombre;
-                inventarioActual.Descripcion = inventario.Descripcion;
-                inventarioActual.Precio = inventario.Precio;
-                inventarioActual.Cantidad = inventario.Cantidad;
+                inventarioActual.Nombre = producto.Nombre;
+                inventarioActual.Descripcion = producto.Descripcion;
+                inventarioActual.Precio = producto.Precio;
+                inventarioActual.Cantidad = producto.Cantidad;
                 await _context.SaveChangesAsync();
             }
 
