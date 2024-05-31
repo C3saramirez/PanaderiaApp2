@@ -1,4 +1,4 @@
-﻿@page "/inventario"
+﻿@page "/productos"
 @rendermode InteractiveServer
 @inject NavigationManager _navigator;
 @inject IRepositorioProductos _repositorio;
@@ -27,6 +27,7 @@ else
                 <th>Descripción</th>
                 <th>Precio de venta</th>
                 <th>Cantidad</th>
+                <th>Insumos</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -38,6 +39,7 @@ else
                     <td>@producto.Id</td>
                     <td>@producto.Nombre</td>
                     <td>@producto.Precio</td>
+                    <td>@producto.Insumos ?? No hay insumos asignados</td>
                     <td>
                         <button class="btn btn-primary" @onclick="()=>Editar(producto.Id)">Editar</button>
                         <button class="btn btn-danger" @onclick="()=>Eliminar(producto)">Eliminar</button>

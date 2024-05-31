@@ -1,11 +1,11 @@
-﻿@page "/inventario"
+﻿@page "/insumos"
 @rendermode InteractiveServer
 @inject NavigationManager _navigator;
 @inject IRepositorioInsumos _repositorio;
 
 <h3>Inventario</h3>
 
-<a class="btn btn-success" href="productos/nuevo">Agregar Insumo</a>
+<a class="btn btn-success" href="insumos/nuevo">Agregar Insumo</a>
 
 @if (_insumos == null)
 {

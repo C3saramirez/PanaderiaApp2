@@ -32,14 +32,15 @@ namespace PanaderiaApp.Repositorios
             await _repositorioInsumos.Delete(id);
         }
 
-        public async Task Update(Insumo insumo)
+        public async Task Update(int id, Insumo insumo)
         {
-            var inventarioActual = await _context.Insumos.FindAsync(insumo.Id);
-            if (inventarioActual != null)
+            var insumoActual = await _context.Insumos.FindAsync(id);
+            if (insumoActual != null)
             {
-                inventarioActual.Nombre = insumo.Nombre;
-                inventarioActual.Descripcion = insumo.Descripcion;
-                inventarioActual.Precio = insumo.Precio;
+                insumoActual.Nombre = insumo.Nombre;
+                insumoActual.Descripcion = insumo.Descripcion;
+                insumoActual.Precio = insumo.Precio;
+                insumoActual.Cantidad = insumo.Cantidad;
                 await _context.SaveChangesAsync();
             }
 

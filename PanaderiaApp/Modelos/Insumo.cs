@@ -18,9 +18,11 @@ namespace PanaderiaApp.Modelos
 
         [Required(ErrorMessage = "Necesitas un precio")]
         [Range(1, 200, ErrorMessage = "El precio debe seer mayor a 0")]
-        public string? Precio { get; set; }
+        public decimal Precio { get; set; }
+        public int Cantidad { get; set; }
 
         // Propiedades de navegacion EF
         virtual public ICollection<Proveedor>? Proveedores { get; set;}
+        virtual public ICollection<Producto>? Productos { get; set;}
     }
 }

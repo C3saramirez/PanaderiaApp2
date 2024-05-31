@@ -1,7 +1,8 @@
 ﻿@page "/proveedores/nuevo"
 @page "/proveedores/editar/{Id:int}"
 @rendermode InteractiveServer
-@inject IRepositorioProveedores _repository;
+@inject IRepositorioProveedores _repositorioProveedores;
+@inject IRepositorioInsumos _repositorioInsumos;
 @inject NavigationManager _navigator;
 <PageTitle>@_message proveedor</PageTitle>
 <h2>@_message proveedor</h2>
@@ -36,6 +37,17 @@
             <ValidationMessage For="@(() => _proveedor.Correo)" />
         </div>
     </div>
+    <div class="row mb-3">
+        <label for="txtinsumos" class="col-2 col-form-label">Insumos</label>
+        <div class="col-10">
+            <InputSelect class="form-control" id="txtinsumos" @bind-Value="_insumosSeleccionados" multiple size="3">
+                @foreach (var insumo in _insumos)
+                {
+                    <option value="@insumo.Id">@insumo.Nombre</option>
+                }
+            </InputSelect>
+        </div>
+    </div>
     <button type="submit" class="btn btn-primary">Guardar</button>
     <button type="button" class="btn btn-danger ms-2" @onclick="Cancelar" @onclick:preventDefault>Cancelar</button>
 
@@ -46,17 +58,37 @@
     public int Id { get; set; }
     private string _message = "";
     private Proveedor _proveedor = new();
+    private List<Insumo> _insumos = new();
+    private int[] _insumosSeleccionados = new int[] { };
 
     protected override async Task OnInitializedAsync()
     {
+        _insumos = await _repositorioInsumos.GetAll();
         if (Id > 0)
         {
-            Proveedor? proveedor = await _repository.Get(Id);
+            Proveedor? proveedor = await _repositorioProveedores.Get(Id);
             _proveedor.Id = proveedor!.Id;
             _proveedor.Nombre = proveedor.Nombre;
             _proveedor.Direccion = proveedor.Direccion;
             _proveedor.Telefono = proveedor.Telefono;
             _proveedor.Correo = proveedor.Correo;
+            if (_proveedor.Insumos.Count != 0)
+            {
+                _insumosSeleccionados = _proveedor.Insumos.Select(i => i.Id).ToArray();
+            }
+            if (_insumosSeleccionados.Count() > 0)
+            {
+                List<Insumo> insumos = new();
+                foreach (int idInsumo in _insumosSeleccionados)
+                {
+                    insumos.Add(_insumos.First(r => r.Id == idInsumo));
+                }
+                _proveedor.Insumos = insumos;
+            }
+            else
+            {
+                _proveedor.Insumos = null;
+            }
             _message = "Editar";
         }
         else
@@ -69,11 +101,11 @@
     {
         if (Id > 0)
         {
-            await _repository.Update(_proveedor!);
+            await _repositorioProveedores.Update(Id, _proveedor!);
         }
         else
         {
-            await _repository.Add(_proveedor);
+            await _repositorioProveedores.Add(_proveedor);
         }
         Cancelar();
     }

@@ -32,9 +32,9 @@ namespace PanaderiaApp.Repositorios
             await _repositorioProveedores.Delete(id);
         }
 
-        public async Task Update(Proveedor proveedor)
+        public async Task Update(int id, Proveedor proveedor)
         {
-            var proveedorActual = await _context.Proveedores.FindAsync(proveedor.Id);
+            var proveedorActual = await _context.Proveedores.FindAsync(id);
             if (proveedorActual != null)
             {
                 proveedorActual.Nombre = proveedor.Nombre;

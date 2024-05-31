@@ -32,15 +32,16 @@ namespace PanaderiaApp.Repositorios
             await _repositorioProductos.Delete(id);
         }
 
-        public async Task Update(Producto producto)
+        public async Task Update(int id, Producto producto)
         {
-            var inventarioActual = await _context.Productos.FindAsync(producto.Id);
-            if (inventarioActual != null)
+            var productoActual = await _context.Productos.FindAsync(id);
+            if (productoActual != null)
             {
-                inventarioActual.Nombre = producto.Nombre;
-                inventarioActual.Descripcion = producto.Descripcion;
-                inventarioActual.Precio = producto.Precio;
-                inventarioActual.Cantidad = producto.Cantidad;
+                productoActual.Nombre = producto.Nombre;
+                productoActual.Descripcion = producto.Descripcion;
+                productoActual.Precio = producto.Precio;
+                productoActual.Cantidad = producto.Cantidad;
+                productoActual.Insumos = producto.Insumos;
                 await _context.SaveChangesAsync();
             }
 
@@ -48,7 +49,7 @@ namespace PanaderiaApp.Repositorios
 
         public async Task<Producto?> Get(int id)
         {
-            return await _context.Productos.FindAsync(id);
+            return await _context.Productos.Include(p => p.Insumos).Where(r => r.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<List<Producto>> GetAll()

@@ -1,7 +1,8 @@
 ﻿@page "/productos/nuevo"
 @page "/productos/editar/{Id:int}"
 @rendermode InteractiveServer
-@inject IRepositorioProductos _repository;
+@inject IRepositorioProductos _repositorioProductos;
+@inject IRepositorioInsumos _repositorioInsumos;
 @inject NavigationManager _navigator;
 <PageTitle>@_message producto</PageTitle>
 <h2>@_message producto</h2>
@@ -25,13 +26,23 @@
     <div class="row mb-3">
         <label for="txtPrecio" class="col-2 col-form-label">Precio de venta</label>
         <div class="col-10">
-            <InputText class="form-control" id="txtPrecio" @bind-Value="_producto.Precio"></InputText>
+            <InputNumber class="form-control" id="txtPrecio" @bind-Value="_producto.Precio"></InputNumber>
             <ValidationMessage For="@(() => _producto.Precio)" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="txtinsumos" class="col-2 col-form-label">Insumos</label>
+        <div class="col-10">
+            <InputSelect class="form-control" id="txtinsumos" @bind-Value="_insumosSeleccionados" multiple size="3">
+                @foreach (var insumo in _insumos)
+                {
+                    <option value="@insumo.Id">@insumo.Nombre</option>
+                }
+            </InputSelect>
         </div>
     </div>
     <button type="submit" class="btn btn-primary">Guardar</button>
     <button type="button" class="btn btn-danger ms-2" @onclick="Cancelar" @onclick:preventDefault>Cancelar</button>
-
 </EditForm>
 
 @code {
@@ -39,16 +50,23 @@
     public int Id { get; set; }
     private string _message = "";
     private Producto _producto = new();
+    private List<Insumo> _insumos = new();
+    private int[] _insumosSeleccionados = new int[] { };
 
     protected override async Task OnInitializedAsync()
     {
+        _insumos = await _repositorioInsumos.GetAll();
         if (Id > 0)
         {
-            Producto? producto = await _repository.Get(Id);
+            Producto? producto = await _repositorioProductos.Get(Id);
             _producto.Id = producto!.Id;
             _producto.Nombre = producto.Nombre;
             _producto.Descripcion = producto.Descripcion;
             _producto.Precio = producto.Precio;
+            if (_producto.Insumos.Count != 0)
+            {
+                _insumosSeleccionados = _producto.Insumos.Select(i => i.Id).ToArray();
+            }
             _message = "Editar";
         }
         else
@@ -59,13 +77,27 @@
 
     private async void Guardar()
     {
-        if (Id > 0)
+        if (_insumosSeleccionados.Count() > 0)
         {
-            await _repository.Update(_producto!);
+            List<Insumo> insumos = new();
+            foreach (int idInsumo in _insumosSeleccionados)
+            {
+                insumos.Add(_insumos.First(r => r.Id == idInsumo));
+            }
+            _producto.Insumos = insumos;
         }
         else
         {
-            await _repository.Add(_producto);
+            _producto.Insumos = null;
+        }
+
+        if (Id > 0)
+        {
+            await _repositorioProductos.Update(Id, _producto!);
+        }
+        else
+        {
+            await _repositorioProductos.Add(_producto);
         }
         Cancelar();
     }

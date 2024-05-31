@@ -1,4 +1,4 @@
-﻿@page "/Proveedores"
+﻿@page "/proveedores"
 @rendermode InteractiveServer
 @inject NavigationManager _navigator;
 @inject IRepositorioProveedores _repositorio;
@@ -27,6 +27,7 @@ else
                 <th>Correo</th>
                 <th>Teléfono</th>
                 <th>Dirección</th>
+                <th>Insumos</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -40,7 +41,7 @@ else
                     <td>@proveedor.Correo</td>
                     <td>@proveedor.Telefono</td>
                     <td>@proveedor.Direccion</td>
-
+                    <td>@proveedor.Insumos ?? No hay insumos asignados</td>
                     <td>
                         <button class="btn btn-primary" @onclick="()=>Editar(proveedor.Id)">Editar</button>
                         <button class="btn btn-danger" @onclick="()=>Eliminar(proveedor)">Eliminar</button>

@@ -1,32 +1,32 @@
 ﻿@page "/insumos/nuevo"
 @page "/insumos/editar/{Id:int}"
 @rendermode InteractiveServer
-@inject IRepositorioInsumos _repository;
+@inject IRepositorioInsumos _repositorioInsumos;
 @inject NavigationManager _navigator;
 <PageTitle>@_message producto</PageTitle>
 <h2>@_message producto</h2>
 
-<EditForm Model="_producto" FormName="frmProductos" OnValidSubmit="Guardar">
+<EditForm Model="_insumo" FormName="frmInsumos" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
     <div class="row mb-3">
         <label for="txtNombre" class="col-2 col-form-label">Nombre</label>
         <div class="col-10">
-            <InputText class="form-control" id="txtNombre" @bind-Value="_producto.Nombre"></InputText>
-            <ValidationMessage For="@(() => _producto.Nombre)" />
+            <InputText class="form-control" id="txtNombre" @bind-Value="_insumo.Nombre"></InputText>
+            <ValidationMessage For="@(() => _insumo.Nombre)" />
         </div>
     </div>
     <div class="row mb-3">
         <label for="txtDescripcion" class="col-form-label col-2">Descripción</label>
         <div class="col-10">
-            <InputText class="form-control" id="txtDescripcion" @bind-Value="_producto.Descripcion"></InputText>
-            <ValidationMessage For="@(() => _producto.Descripcion)" />
+            <InputText class="form-control" id="txtDescripcion" @bind-Value="_insumo.Descripcion"></InputText>
+            <ValidationMessage For="@(() => _insumo.Descripcion)" />
         </div>
     </div>
     <div class="row mb-3">
         <label for="txtPrecio" class="col-2 col-form-label">Precio de compra</label>
         <div class="col-10">
-            <InputText class="form-control" id="txtPrecio" @bind-Value="_producto.Precio"></InputText>
-            <ValidationMessage For="@(() => _producto.Precio)" />
+            <InputNumber class="form-control" id="txtPrecio" @bind-Value="_insumo.Precio"></InputNumber>
+            <ValidationMessage For="@(() => _insumo.Precio)" />
         </div>
     </div>
     <button type="submit" class="btn btn-primary">Guardar</button>
@@ -38,17 +38,17 @@
     [Parameter]
     public int Id { get; set; }
     private string _message = "";
-    private Insumo _producto = new();
+    private Insumo _insumo = new();
 
     protected override async Task OnInitializedAsync()
     {
         if (Id > 0)
         {
-            Insumo? insumo = await _repository.Get(Id);
-            _producto.Id = insumo!.Id;
-            _producto.Nombre = insumo.Nombre;
-            _producto.Descripcion = insumo.Descripcion;
-            _producto.Precio = insumo.Precio;
+            Insumo? insumo = await _repositorioInsumos.Get(Id);
+            _insumo.Id = insumo!.Id;
+            _insumo.Nombre = insumo.Nombre;
+            _insumo.Descripcion = insumo.Descripcion;
+            _insumo.Precio = insumo.Precio;
             _message = "Editar";
         }
         else
@@ -61,11 +61,11 @@
     {
         if (Id > 0)
         {
-            await _repository.Update(_producto!);
+            await _repositorioInsumos.Update(Id, _insumo!);
         }
         else
         {
-            await _repository.Add(_producto);
+            await _repositorioInsumos.Add(_insumo);
         }
         Cancelar();
     }

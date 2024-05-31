@@ -8,7 +8,7 @@ namespace PanaderiaApp.Repositorios
         Task<Proveedor?> Get(int id);
 
         Task<Proveedor> Add(Proveedor proveedor);
-        Task Update(Proveedor proveedor);
+        Task Update(int id, Proveedor proveedor);
         Task Delete(int id);
     }
 }
