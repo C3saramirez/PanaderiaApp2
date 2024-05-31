@@ -54,7 +54,7 @@ namespace PanaderiaApp.Repositorios
 
         public async Task<List<Producto>> GetAll()
         {
-            return await _context.Productos.ToListAsync();
+            return await _context.Productos.Include(p => p.Insumos).ToListAsync();
         }
 
     }

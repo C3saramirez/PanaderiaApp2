@@ -41,6 +41,7 @@ namespace PanaderiaApp.Repositorios
                 proveedorActual.Direccion = proveedor.Direccion;
                 proveedorActual.Telefono = proveedor.Telefono;
                 proveedorActual.Correo = proveedor.Correo;
+                proveedorActual.Insumos = proveedor.Insumos;
                 await _context.SaveChangesAsync();
             }
 
@@ -48,12 +49,12 @@ namespace PanaderiaApp.Repositorios
 
         public async Task<Proveedor?> Get(int id)
         {
-            return await _context.Proveedores.FindAsync(id);
+            return await _context.Proveedores.Include(p => p.Insumos).Where(r => r.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<List<Proveedor>> GetAll()
         {
-            return await _context.Proveedores.ToListAsync();
+            return await _context.Proveedores.Include(p => p.Insumos).ToListAsync();
         }
 
     }
